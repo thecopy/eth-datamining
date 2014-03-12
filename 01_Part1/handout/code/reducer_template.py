@@ -18,6 +18,8 @@ for line in sys.stdin:
     line = line.strip()
     key, video_id = line.split("\t")
 
+    #print(video_id + ' has key ' + key)
+
     if last_key is None:
         last_key = key
 
