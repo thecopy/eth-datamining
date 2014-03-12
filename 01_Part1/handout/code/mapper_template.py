@@ -7,19 +7,32 @@ def emit(key, value):
     # write to stdout
     print(key + '\t' + str(value))
 
+def getMinHashSignature(shingles, hash_fns):
+    #print("number of hash fns: " + str(len(hash_fns)))
+    M = len(hash_fns) * [int(max(shingles)+100)]
+
+    for row in range(int(max(shingles))+1):
+        if row in shingles:
+
+            #print("Video has shingle " + str(row))
+            for i,hash_fn in enumerate(hash_fns):
+                #print('hashfn: ' + str(hash_fn))
+                M[i] = min(M[i], h(hash_fn,row))
+
+    #print(M)
+    return M
+
 def partition(video_id, shingles, R, B, hash_fns):
+    M = getMinHashSignature(shingles, hash_fns);
 
-    for r in range(R):  
+    for b in range(B):  
         key = ''
-        for b in range(B):
-            row = r*R + b
-            row_permutated = h(hash_fns[r], row);
-            #print('Checking if ' + str(video_id) + ' contains shingle ' + str(row_permutated))
-            if(row_permutated in shingles[r*B  : (r+1)*B - 1]):
-                key += str(b)
+        for r in range(R):
+            row = b*R+r;
 
-        if(key != ''):
-            emit(key, video_id)
+            key += str(M[row])
+
+        emit(key, video_id)
 
 def h(permutator, row):
     return (permutator[0] * row + permutator[1]) % permutator[2]
@@ -35,15 +48,19 @@ if __name__ == "__main__":
     np.random.seed(seed=42)
     
     # Configuration
-    num_shingles = 10000
-    R = 20
-    B = int(num_shingles/R)
+    num_features = 10000;
+    t = 0.85
+    n = 100; # number of hashes
+
+    # B and R will produce threshhold of 0.8. Giving more FP.
+    # This produces "only more work"
+    B = 6;
+    R = 15;
 
     # Generate hash functions
     hash_sigs = []
-    for i in range(R):
-        hash_sigs.append( get_permutation_descriptor(10000) )
-
+    for i in range(n):
+        hash_sigs.append( get_permutation_descriptor(num_features) )
 
     for line in sys.stdin:
         line = line.strip()
