@@ -67,6 +67,7 @@ if __name__ == "__main__":
         video_id = int(line[6:15])
         shingles = line[16:].split()
         value = str(video_id) + " " + line[16:]
+        shingles = np.fromstring(line[16:], sep=" ")
         partition(value, shingles, R, B, hash_sigs)
 
     #print("-----")
