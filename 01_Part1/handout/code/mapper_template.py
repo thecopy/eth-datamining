@@ -9,7 +9,7 @@ def emit(key, value):
 
 def getMinHashSignature(shingles, hash_fns):
     #print("number of hash fns: " + str(len(hash_fns)))
-    M = len(hash_fns) * [int(max(shingles)+100)]
+    M = len(hash_fns) * [int(max(shingles))+100]
 
     for row in range(int(max(shingles))+1):
         if row in shingles:
@@ -65,6 +65,7 @@ if __name__ == "__main__":
     for line in sys.stdin:
         line = line.strip()
         video_id = int(line[6:15])
+        shingles = line[16:].split()
         value = str(video_id) + " " + line[16:]
         partition(value, shingles, R, B, hash_sigs)
 
