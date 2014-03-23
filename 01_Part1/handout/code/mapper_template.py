@@ -5,7 +5,7 @@ import sys
 
 def emit(key, value):
     # write to stdout
-    print(key + '\t' + str(value))
+    print(key + '\t' + value)
 
 def getMinHashSignature(shingles, hash_fns):
     #print("number of hash fns: " + str(len(hash_fns)))
@@ -22,7 +22,7 @@ def getMinHashSignature(shingles, hash_fns):
     #print(M)
     return M
 
-def partition(video_id, shingles, R, B, hash_fns):
+def partition(value, shingles, R, B, hash_fns):
     M = getMinHashSignature(shingles, hash_fns);
 
     for b in range(B):  
@@ -32,7 +32,7 @@ def partition(video_id, shingles, R, B, hash_fns):
 
             key += str(M[row])
 
-        emit(key, video_id)
+        emit(key, value)
 
 def h(permutator, row):
     return (permutator[0] * row + permutator[1]) % permutator[2]
@@ -65,8 +65,8 @@ if __name__ == "__main__":
     for line in sys.stdin:
         line = line.strip()
         video_id = int(line[6:15])
-        shingles = np.fromstring(line[16:], sep=" ")
-        partition(video_id, shingles, R, B, hash_sigs)
+        value = str(video_id) + " " + line[16:]
+        partition(value, shingles, R, B, hash_sigs)
 
     #print("-----")
     #print("Config: R=" + str(R) + " B=" + str(B))
