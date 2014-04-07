@@ -50,16 +50,16 @@ if __name__ == "__main__":
     # Configuration
     num_features = 10000;
     t = 0.85
-    n = 100; # number of hashes
+    n = 256; # number of hashes
 
     # B and R will produce threshhold of 0.8. Giving more FP.
     # This produces "only more work"
-    B = 6;
-    R = 15;
+    B = 16;
+    R = 16;
 
     # Generate hash functions
     hash_sigs = []
-    for i in range(n):
+    for i in range(R*B):
         hash_sigs.append( get_permutation_descriptor(num_features) )
 
     for line in sys.stdin:
