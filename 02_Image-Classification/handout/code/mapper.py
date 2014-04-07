@@ -5,5 +5,16 @@
 def transform(x_original):
     return x_original
 
+def SGD(x):
+	pass
+
+
 if __name__ == "__main__":
-    pass
+	data = [];
+	for line in sys.stdin:
+        line = line.strip()
+        label = int(line[0:2])
+        features = line[3:].split()
+        data.push( ( id, transform(features) ) )
+
+    SGD(data)
