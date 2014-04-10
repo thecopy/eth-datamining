@@ -10,12 +10,14 @@ if __name__ == "__main__":
 	with open('w.data') as f:
 		w = np.array( map(float, f.readline().split()) )
 
-
 	for line in sys.stdin:
 		x = np.array( map(float, line.split()) )
 		if(skipFirst):
 			x = x[1:]
 
-		y = np.sign(np.dot(w.T, x))
-		print str(int(y))
+		y = int(np.sign(np.dot(w.T, x)))
+		if(y == 0):
+			y = -1
+
+		print str(y)
 
