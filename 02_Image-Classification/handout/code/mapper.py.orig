@@ -1,10 +1,15 @@
+<<<<<<< HEAD
 #!/usr/bin/env python
 import numpy as np
 import sys
+=======
+#!/usr/bin/env python2.7
+>>>>>>> 4dcbe90c42af2ca74f03b0966b1e97c4f40b6088
 
 # This function has to either stay in this form or implement the
 # feature mapping. For details refer to the handout pdf.
 def transform(x_original):
+<<<<<<< HEAD
 	return x_original
 
 def SGD(data):
@@ -13,7 +18,7 @@ def SGD(data):
 	C = 2
 	w = np.zeros(shape=(1,dim))
 
-	#print("Running SGD...")
+	print("Running SGD...")
 
 	for i,p in enumerate(data):
 		if(label*w*p[1].T >= 1):
@@ -25,8 +30,8 @@ def SGD(data):
 		sys.stdout.write(str(w[0,i]) + "  ")
 
 if __name__ == "__main__":
-	#print(sys.version)
-	#print("Reading input...")
+	print(sys.version)
+	print("Reading input...")
 	data = [];
 	for line in sys.stdin:
 		line = line.strip()
@@ -35,3 +40,9 @@ if __name__ == "__main__":
 		data.append( (id, features) )
 
 	SGD(data)
+=======
+    return x_original
+
+if __name__ == "__main__":
+    pass
+>>>>>>> 4dcbe90c42af2ca74f03b0966b1e97c4f40b6088

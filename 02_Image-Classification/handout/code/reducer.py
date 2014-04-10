@@ -2,5 +2,6 @@
 import sys
 
 if __name__ == "__main__":
-	pass
+	for line in sys.stdin:
+		print line
 
