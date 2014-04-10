@@ -4,10 +4,15 @@ import numpy as np
 
 if __name__ == "__main__":
 	skipFirst = False
-	if(len(sys.argv) > 1 and sys.argv[1] == 's'):
+	filename = "w.data"
+	if(len(sys.argv) == 2 and sys.argv[1] == 's'):
 		skipFirst = True
 
-	with open('w.data') as f:
+	if(len(sys.argv) == 3 and sys.argv[2] == 's'):
+		skipFirst = True
+		filename = sys.argv[1]
+
+	with open(filename) as f:
 		w = np.array( map(float, f.readline().split()) )
 
 	for line in sys.stdin:

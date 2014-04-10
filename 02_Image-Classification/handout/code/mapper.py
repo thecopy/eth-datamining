@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 import numpy as np
 import sys
 
@@ -19,7 +19,7 @@ def SGD(labels, data):
 
 	a = 1 # learning rate = 1/iterations
 	n = len(data) # number of data points
-	C = 0.5 # regularization constant
+	C = 10 # regularization constant
 	w = np.zeros(dim) # coefficents
 	e = 0.01 # threshold
 	iters = 1 # iterations
@@ -32,7 +32,7 @@ def SGD(labels, data):
 			w = w - (a/iters)*( 2*w/n - C*x*y)
 
 	for i in range(dim):
-		sys.stdout.write(str(w[i]) + "  ")
+		sys.stdout.write(str(w[i]) + " ")
 	sys.stdout.write("\n")
 
 if __name__ == "__main__":
