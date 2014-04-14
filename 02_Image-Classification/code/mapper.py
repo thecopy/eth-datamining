@@ -15,7 +15,7 @@ def transform(x):
 def read_input():
 #     print('read_input: reading input')
     input_stream = sys.stdin
-#     input_stream = open('training', 'r')    
+#     input_stream = open('training', 'r')
     for line in input_stream:
         line = line.strip()
         label = int(line[0:2])
@@ -26,7 +26,7 @@ def read_input():
                 
 def train():
 #     print('train: training data')
-    classifier = linear_model.SGDClassifier(loss='hinge', penalty='l2', alpha=0.001, shuffle=True, fit_intercept=False, n_iter=5)
+    classifier = linear_model.SGDClassifier(loss='hinge', penalty='l2', alpha=0.1, shuffle=True, fit_intercept=False, n_iter=10)
     classifier.fit(features_tranformed, labels);
 
     for coefficient in np.nditer(classifier.coef_):
