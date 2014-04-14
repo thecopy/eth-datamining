@@ -1,4 +1,4 @@
-#!/usr/local/bin/python -u
+#!/usr/bin/env python
 
 import numpy as np
 import sys
@@ -7,10 +7,9 @@ from sklearn import preprocessing, linear_model
 # This function has to either stay in this form or implement the
 # feature mapping. For details refer to the handout pdf.
 def transform(x):
-    x_square = x * x
-    x_log = np.log(x + 0.1)
-    x_transformed = np.hstack((x, x_square))
-    return x
+    x_power = x ** 2 
+    x_transformed = np.hstack((x, x_power))
+    return x_transformed
 
 def read_input():
     input_stream = sys.stdin
@@ -23,7 +22,7 @@ def read_input():
         features.append(feature)
                 
 def train():
-    classifier = linear_model.SGDClassifier(loss='hinge', penalty='l2', alpha=0.05, shuffle=True, fit_intercept=False, n_iter=20, learning_rate='invscaling', eta0=0.01)
+    classifier = linear_model.SGDClassifier(loss='hinge', penalty='l2', alpha=0.5, shuffle=True, fit_intercept=False, n_iter=150, learning_rate='invscaling', eta0=0.05)
     classifier.fit(features, labels);
 
     for coefficient in np.nditer(classifier.coef_):
