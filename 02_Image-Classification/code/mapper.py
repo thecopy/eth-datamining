@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python -u
 
 import numpy as np
 import sys
@@ -26,7 +26,7 @@ def read_input():
                 
 def train():
 #     print('train: training data')
-    classifier = linear_model.SGDClassifier(loss='hinge', penalty='l2', alpha=0.1, shuffle=True, fit_intercept=False, n_iter=10)
+    classifier = linear_model.SGDClassifier(loss='hinge', penalty='l2', alpha=0.1, shuffle=True, fit_intercept=False, n_iter=100)
     classifier.fit(features_tranformed, labels);
 
     for coefficient in np.nditer(classifier.coef_):
