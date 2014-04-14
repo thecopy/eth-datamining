@@ -19,21 +19,29 @@ def SGD(labels, data):
 
 	a = 1 # learning rate = 1/iterations
 	n = len(data) # number of data points
-	C = 10 # regularization constant
+	C = 1 # regularization constant
 	w = np.zeros(dim) # coefficents
 	e = 0.01 # threshold
 	iters = 1 # iterations
 
+	useL1 = True
+
 	for i,x in enumerate(data):
 		y = labels[i] # label
 		if(y * np.dot(w.T,x) >= 1): # if data-point is correctly classified
-			w = w - (a/iters)*  2*w/n
+			w = w - (a/iters)*  regularizationTerm(w,useL1)/n
 		else:						# if data-point is incorrectly classified
-			w = w - (a/iters)*( 2*w/n - C*x*y)
+			w = w - (a/iters)*( regularizationTerm(w,useL1)/n - C*x*y)
 
 	for i in range(dim):
 		sys.stdout.write(str(w[i]) + " ")
 	sys.stdout.write("\n")
+
+def regularizationTerm(w, useL1):
+	if(useL1):
+		return np.sign(w)
+	else:
+		return 2*w
 
 if __name__ == "__main__":
 	#print(sys.version)
