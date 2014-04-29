@@ -3,7 +3,7 @@ import sys
 import numpy as np
 
 def merge_and_compress(left,right):
-	k = 100
+	k = 200
 	merged = left + right;
 
 	return compress_naive(merged,k)
@@ -18,7 +18,7 @@ if __name__ == "__main__":
 	last = [] # this is the last coreset we filled up
 	merged = None # the merged and compressed coreset (of current and last)
 
-	k = 100
+	k = 200
 	i = 0
 	for line in sys.stdin:
 		data = map(float, line.split(" "))

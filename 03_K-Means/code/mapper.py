@@ -71,7 +71,7 @@ def only_dev_read_data_from_file():
 
 if __name__ == "__main__":
 	data = readInput()
-	k = 100
+	k = 200
 	coreset = calculateCoreset_naive(data ,k)
 	printResult(coreset)
 
