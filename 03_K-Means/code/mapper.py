@@ -56,8 +56,8 @@ def readInput():
 
 	ret = []
 	for line in sys.stdin:
-		ret.push(map(float,line.split(" ")))
-	return ret;
+		ret.append(map(float,line.split(" ")))
+	return np.array(ret);
 
 def printResult(coreset):
 	for line in coreset:
