@@ -7,7 +7,7 @@ article_features = dict()
 A = dict()
 b = dict()
 d = 6
-alpha = 0.5
+alpha = 2.15
 chosen = 0
 
 # Evaluator will call this function and pass the article features.
@@ -20,6 +20,9 @@ def set_articles(articles):
 # This function will be called by the evaluator.
 # Check task description for details.
 def update(reward):
+    if reward == -1:
+        return
+
     article_A = A[chosen]
     article_b = b[chosen]
     article_feature = article_features[chosen]
