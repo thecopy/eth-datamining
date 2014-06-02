@@ -40,6 +40,12 @@ def process(path):
             else:
                 policy.update(-1)
 
+            if lines_total % 1000 == 0:
+                print "Evaluated %d/%d lines." % ( lines_evaluated, lines_total)
+                print "CTR=%f" % (float(clicked) /  lines_evaluated)
+                print len(policy.article_features)
+                print len(policy.A.keys())
+
         print "Evaluated %d/%d lines." % ( lines_evaluated, lines_total)
         print "CTR=%f" % (float(clicked) /  lines_evaluated)
 
@@ -49,4 +55,8 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     read_articles(sys.argv[1])
+    from datetime import datetime
+    start = datetime.now()
     process(sys.argv[2])
+    end = datetime.now()
+    print end - start
