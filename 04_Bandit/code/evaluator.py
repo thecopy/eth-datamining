@@ -2,6 +2,7 @@
 import sys
 import policy # This is your policy file.
 
+
 def read_articles(path):
     articles = {}
     with file(path) as inf:
@@ -9,6 +10,7 @@ def read_articles(path):
             tokens = line.strip().split()
             articles[int(tokens[0])] = [float(x) for x in tokens[1:]]
     policy.set_articles(articles)
+
 
 def process(path):
 
@@ -29,7 +31,7 @@ def process(path):
             # Getting the recommended article.
             calculated = policy.reccomend(time, user_features, articles)
 
-            if not calculated in articles:
+            if calculated not in articles:
                 raise Exception("Article was not in the list.")
 
             # Updating the policy.
@@ -41,13 +43,12 @@ def process(path):
                 policy.update(-1)
 
             if lines_total % 1000 == 0:
-                print "Evaluated %d/%d lines." % ( lines_evaluated, lines_total)
-                print "CTR=%f" % (float(clicked) /  lines_evaluated)
-                print len(policy.article_features)
-                print len(policy.A.keys())
+                print "Evaluated %d/%d lines." % (lines_evaluated, lines_total)
+                print "CTR = %f" % (float(clicked) / lines_evaluated)
+                print "Number of articles viewed %d" % len(policy.A.keys())
 
-        print "Evaluated %d/%d lines." % ( lines_evaluated, lines_total)
-        print "CTR=%f" % (float(clicked) /  lines_evaluated)
+        print "Evaluated %d/%d lines." % (lines_evaluated, lines_total)
+        print "CTR = %f" % (float(clicked) / lines_evaluated)
 
 if __name__ == "__main__":
     if (len(sys.argv) != 3):
