@@ -64,7 +64,18 @@ To solve this problem we used a min-hashing on the mapper with partitioning with
                 This resulted in a score of 0.99, close to the perfect 1.0. It would be trivial to reach 1.0  (by tweaking the number of band and rows to get a lower threshhold before manually running jaccard similarity), but since we would not gain anything by this we did not do it. 
 
 \section{Large-Scale Image Classification}
-Maximum of 2 pages per section.
+
+In this part of the project we trained our classifier SVM using parallel Stochastic Gradient Descent on MapReduce. 
+
+\subsection{Description}
+
+The task was to classify pictures, represented as 400-coefficient feature vectors, into two categories: Nature and People. We normalize these feature vectors but do not perform any other transformations..
+
+\subsection{Mapper}
+
+\subsection{Reducer}
+
+\subsection{Results}
 
 \section{Extracting Representative Elements From Large Datasets}
 Maximum of 2 pages per section.
