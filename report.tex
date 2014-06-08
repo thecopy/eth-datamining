@@ -17,7 +17,7 @@
 \renewcommand{\familydefault}{\sfdefault}
 
 \title{Data Mining: Learning from Large Data Sets - Spring Semester 2014}
-\author{jerik@student.ethz.ch\\ member2@student.ethz.ch\\ member3@student.ethz.ch\\}
+\author{jerik@student.ethz.ch\\ sethv@student.ethz.ch\\ ruxu@student.ethz.ch\\}
 \date{\today}
 
 \begin{document}
@@ -26,42 +26,42 @@
 \section{Approximate near-duplicate search using Locality Sensitive Hashing} 
 To solve this problem we used a min-hashing on the mapper with partitioning with a lower target threshhold and then manually running jaccard to find hash out the false positives.
 
-	\subsection{Min-Hashing on the Mapper}
-		We start by generating the permutations which we're going to use. We use a hashing function in the form
-			\[h(x) = a_0x + a_1 \mod N\]
-		where N is the number of features (i.e. $10000$), and $a_0$ and $a_1$ is uniformly randomly generated. We generate 256 permutations. Incidently, we use, for the signature matrix, 16 rows and 16 bands.
+        \subsection{Min-Hashing on the Mapper}
+                We start by generating the permutations which we're going to use. We use a hashing function in the form
+                        \[h(x) = a_0x + a_1 \mod N\]
+                where N is the number of features (i.e. $10000$), and $a_0$ and $a_1$ is uniformly randomly generated. We generate 256 permutations. Incidently, we use, for the signature matrix, 16 rows and 16 bands.
 
-		After this we generate the signature matrix. We do this by reading the next video descriptor, i.e. all the shingles, and then performing this algorithm:
-		\begin{verbatim}
-			  set M to be row vector of length 256 with each element infinity
-			  for i=1:10000 do
-			    if current video has shingle s, do
-			      for each hash function h_i, do
-			        if h_i(s) < M(i), do
-			          set M(i) = h_i(s)
-			  return M
-		\end{verbatim}
-		So now $M$ represents the column in the signature matrix which represents the current video. 
+                After this we generate the signature matrix. We do this by reading the next video descriptor, i.e. all the shingles, and then performing this algorithm:
+                \begin{verbatim}
+                          set M to be row vector of length 256 with each element infinity
+                          for i=1:10000 do
+                            if current video has shingle s, do
+                              for each hash function h_i, do
+                                if h_i(s) < M(i), do
+                                  set M(i) = h_i(s)
+                          return M
+                \end{verbatim}
+                So now $M$ represents the column in the signature matrix which represents the current video. 
 
-		Now we iterate; for each band $B$:
-		\begin{verbatim}
-			  set M according to the algorithm above
-			  set key = ''
-			  for each row R in band B, do
-			    append M(R) to key
-			    emit(key, value)
-		\end{verbatim}
+                Now we iterate; for each band $B$:
+                \begin{verbatim}
+                          set M according to the algorithm above
+                          set key = ''
+                          for each row R in band B, do
+                            append M(R) to key
+                            emit(key, value)
+                \end{verbatim}
 
-		where $value$ is the video ID.\\
-		Now read the next video and repeat.
- 		
-	\subsection{Detecting duplicates on the reducer}
-		Now, since we emit the signature as the key, and the MapReduce environment sorts out data based on the keys, we can get all videos with the same key serially. And since we used 16 bands with 16 rows, we have a threshold of 0.8 = 80\% (target is 85\%). Hence we will get some false positives, but few false negatives.\\
+                where $value$ is the video ID.\\
+                Now read the next video and repeat.
+                
+        \subsection{Detecting duplicates on the reducer}
+                Now, since we emit the signature as the key, and the MapReduce environment sorts out data based on the keys, we can get all videos with the same key serially. And since we used 16 bands with 16 rows, we have a threshold of 0.8 = 80\% (target is 85\%). Hence we will get some false positives, but few false negatives.\\
 
-		So we collect all videos with the same key (signature) and we run a jaccard similarity measurement between all the videos with this key, and if they have at least 85\% similarity we emit this as a duplicate.
+                So we collect all videos with the same key (signature) and we run a jaccard similarity measurement between all the videos with this key, and if they have at least 85\% similarity we emit this as a duplicate.
 
-	\subsection{Result}
-		This resulted in a score of 0.99, close to the perfect 1.0. It would be trivial to reach 1.0  (by tweaking the number of band and rows to get a lower threshhold before manually running jaccard similarity), but since we would not gain anything by this we did not do it. 
+        \subsection{Result}
+                This resulted in a score of 0.99, close to the perfect 1.0. It would be trivial to reach 1.0  (by tweaking the number of band and rows to get a lower threshhold before manually running jaccard similarity), but since we would not gain anything by this we did not do it. 
 
 \section{Large-Scale Image Classification}
 Maximum of 2 pages per section.
@@ -69,7 +69,64 @@ Maximum of 2 pages per section.
 \section{Extracting Representative Elements From Large Datasets}
 Maximum of 2 pages per section.
 
+\newpage
+
 \section{Explore-Exploit Tradeoffs in Recommender Systems}
-Maximum of 2 pages per section.
+
+We used the LinUCB algorithm given in lecture to learn a good recommendation policy over the set of articles.
+
+\subsection{Recommendation}
+
+The recommendation algorithm is reproduced below for reference.
+\newline
+
+In each round:
+\begin{itemize}
+
+\item Receive article set $A_t$ and user features $z_t$
+\item For each article $x \in A_t$:
+
+\begin{itemize}
+
+    \item If $x$ is new, then set $M_x = I$ and $b_x = 0$
+    \item Set $\hat{w}_x = M_x^{-1} \cdot b_x$
+    \item Set $UCB_x = \hat{w}_x^T \cdot z_t + \alpha \sqrt{z_t^T \cdot M_x^{-1} \cdot z_t)}$
+
+\end{itemize}
+        
+\item Recommend article $x_t = 
+    \operatorname{argmax}_{x \in A_t} UCB_x$
+        
+\end {itemize}
+
+
+\subsection{Update}
+
+If the random policy does not recommend the same article, no update occurs.
+
+Otherwise, the reward is either 1 (user clicked on the recommended article) or 0 (user did not click). We use $y_t$ below to denote the reward.
+
+
+
+Set $M_x \leftarrow M_x + z_t \cdot z_t^T$
+
+Set $b_x \leftarrow b_x + y_t z_t$
+
+This update is done quite easily in our implementation, as we simply add the outer product of the chosen feature vector $z_t$ to the chosen article's matrix $M_x$ (stored in the hash table $A$) and add reward feedbackto the chosen article's $b_x$.
+\begin{verbatim}
+    A[chosen_article] += np.outer(chosen_feature, chosen_feature)
+    b[chosen_article] += reward * chosen_feature
+\end{verbatim}
+
+\subsection{Implementation details}
+
+We use Python dictionaries to keep the matrix $M_x$ and a vector $b_x$ for each arm (article). Since each round requires multiple vector operations (and possibly a matrix outer product) we use Numpy arrays rather than Python lists. Numpy provides optimized linear algebra operations that speed up our code by orders of magnitude compared to the naive implementation.
+
+\subsection{Results}
+
+We experimented with various values for the learning rate $\alpha$ between 0.1 and 2. After some test submissions we found that $\alpha = 0.3$ produced a score of 0.059632, just above the hard baseline.
+
+
+
 
 \end{document} 
