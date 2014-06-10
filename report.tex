@@ -95,7 +95,11 @@ The reducer simply averages the clusterings produced by each mapper.
 
 \subsection{Results}
 
-Our result was 743.42174089, a lower cost than the easy baseline but higher than the hard baseline. We suspect that importance sampling would give a superior result, but uniform sampling and the scikit-learn k-means implementation was sufficient to surpass the easy baseline.
+The "representativeness" of our set C of 200 centers for the provided dataset P was defined as 
+\[cost(P,C) = \frac{1}{\mathopen|P\mathclose|} \sum\limits_{p \in P} \min\limits_{c \in C} d(p,c)^2\]
+where $d(p,c)$ is the Euclidean distance from a datapoint p to a center c.
+
+Our result was 743.42174089, a lower cost than the easy baseline but higher than the hard baseline. We suspect that importance sampling would have given a superior result, but uniform sampling and the scikit-learn k-means implementation was sufficient to surpass the easy baseline.
 
 \newpage
 
