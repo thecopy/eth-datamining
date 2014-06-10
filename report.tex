@@ -23,45 +23,49 @@
 \begin{document}
 \maketitle
 
-\section{Approximate near-duplicate search using Locality Sensitive Hashing} 
-To solve this problem we used a min-hashing on the mapper with partitioning with a lower target threshhold and then manually running jaccard to find hash out the false positives.
+\section{Approximate Near-duplicate Search using Locality Sensitive Hashing} 
+To detect duplicate videos, min-hashing is used on videos in the mapper so that similar ones are grouped together. In order not to miss any potential duplicate videos, we set a relatively lower threshhold and then manually filter out false positives using jaccard similarity.
 
         \subsection{Min-Hashing on the Mapper}
-                We start by generating the permutations which we're going to use. We use a hashing function in the form
+                We start by generating the permutations which will be used in the algorithm first. Then a hash function of the form
                         \[h(x) = a_0x + a_1 \mod N\]
-                where N is the number of features (i.e. $10000$), and $a_0$ and $a_1$ is uniformly randomly generated. We generate 256 permutations. Incidently, we use, for the signature matrix, 16 rows and 16 bands.
+                is chosen, where N is the number of features (i.e. $10000$) and $a_0$ and $a_1$ is uniformly randomly generated. In the implementation, 256 permutations are used. Incidentally, for the signature matrix, 16 rows and 16 bands are used.
 
-                After this we generate the signature matrix. We do this by reading the next video descriptor, i.e. all the shingles, and then performing this algorithm:
+                Afterwards, we generate the signature matrix by reading the next video descriptor, i.e. all the shingles, and then performing the following algorithm:
                 \begin{verbatim}
-                          set M to be row vector of length 256 with each element infinity
+                          set M to be a row vector of length 256 
+                          set each element of M to infinity
+
                           for i=1:10000 do
-                            if current video has shingle s, do
-                              for each hash function h_i, do
-                                if h_i(s) < M(i), do
-                                  set M(i) = h_i(s)
+                              if current video has shingles, do
+                                  for each hash function h_i, do
+                                      if h_i(s) < M(i), do
+                                      set M(i) = h_i(s)
                           return M
                 \end{verbatim}
-                So now $M$ represents the column in the signature matrix which represents the current video. 
+                Therefore, $M$ represents the column in the signature matrix which stands for the current video.
+                \pagebreak
 
-                Now we iterate; for each band $B$:
+                Using the following algorithm, we iterate for each band $B$:
                 \begin{verbatim}
                           set M according to the algorithm above
-                          set key = ''
+                          set key to ''
                           for each row R in band B, do
-                            append M(R) to key
-                            emit(key, value)
+                              append M(R) to key
+                              emit(key, value)
                 \end{verbatim}
 
                 where $value$ is the video ID.\\
-                Now read the next video and repeat.
+                Read the next video and repeat the steps above.
                 
-        \subsection{Detecting duplicates on the reducer}
-                Now, since we emit the signature as the key, and the MapReduce environment sorts out data based on the keys, we can get all videos with the same key serially. And since we used 16 bands with 16 rows, we have a threshold of 0.8 = 80\% (target is 85\%). Hence we will get some false positives, but few false negatives.\\
+        \subsection{Detecting Duplicates on the Reducer}
+                Since in the mapper we emit the signature as the key and MapReduce environment groups data automatically based on the keys, we can get all videos with the same key sequentially. Because we used 16 bands with 16 rows, we have a threshold of 0.8 = 80\% (target is 85\%). Hence we will get some false positives, but very few false negatives.\\
 
-                So we collect all videos with the same key (signature) and we run a jaccard similarity measurement between all the videos with this key, and if they have at least 85\% similarity we emit this as a duplicate.
+                After collecting all videos with the same key (signature), we inspect all videos with this key by calculating their Jaccard similarity. If the similarity is at least 85\%, the video is considered as a duplicate.
 
         \subsection{Result}
-                This resulted in a score of 0.99, close to the perfect 1.0. It would be trivial to reach 1.0  (by tweaking the number of band and rows to get a lower threshhold before manually running jaccard similarity), but since we would not gain anything by this we did not do it. 
+                With the above algorithm, we achieved a result of 0.99. We think that by further tweaking the number of band and rows, we could get a lower threshhold before manually filtering similar object and potentially reach a higher score.
+\pagebreak
 
 \section{Large-Scale Image Classification}
 
@@ -76,6 +80,7 @@ The task was to classify pictures, represented as 400-coefficient feature vector
 \subsection{Reducer}
 
 \subsection{Results}
+\pagebreak
 
 \section{Extracting Representative Elements From Large Datasets}
 Maximum of 2 pages per section.
