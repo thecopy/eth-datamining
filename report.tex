@@ -65,22 +65,23 @@ To detect duplicate videos, min-hashing is used on videos in the mapper so that 
 
         \subsection{Result}
                 With the above algorithm, we achieved a result of 0.99. We think that by further tweaking the number of band and rows, we could get a lower threshhold before manually filtering similar object and potentially reach a higher score.
-\pagebreak
+
+\newpage
 
 \section{Large-Scale Image Classification}
 
-In this part of the project we trained our classifier SVM using parallel Stochastic Gradient Descent on MapReduce. 
-
-\subsection{Description}
-
-The task was to classify pictures, represented as 400-coefficient feature vectors, into two categories: Nature and People. We normalize these feature vectors but do not perform any other transformations..
+In this part of the project, we trained our SVM classifier using parallel Stochastic Gradient Descent on MapReduce. The task was to classify pictures, represented as 400-coefficient feature vectors, into two categories: Nature and People.
 
 \subsection{Mapper}
+In every mapper, we trained a linear SVM classifier online by reading the input data line by line. We used the function SGDClassifier provided by scikit for learning.
 
 \subsection{Reducer}
+The implementation in the reducer is straightforward. We just took the mean of all the values passed by every mapper to obtain the final coefficients.
 
 \subsection{Results}
-\pagebreak
+In order to achieve better result, we tried different tranformations on the input data. Example transformations we used include power functions, logarithm functions, etc. The submission result did not show very much improvement. We also alternated between different loss funcitons and regularization parameters. In the final result, we chose to use hinge loss and l2 norm and obtained around 77 percent of the final score.
+
+\newpage
 
 \section{Extracting Representative Elements From Large Datasets}
 Maximum of 2 pages per section.
@@ -88,12 +89,11 @@ Maximum of 2 pages per section.
 \newpage
 
 \section{Explore-Exploit Tradeoffs in Recommender Systems}
-
-We used the LinUCB algorithm given in lecture to learn a good recommendation policy over the set of articles.
+For this problem, we used the LinUCB algorithm given in lecture to learn the recommendation policy over the set of articles and logs. More precisely, the disjont LinUCB model was selected.
 
 \subsection{Recommendation}
 
-The recommendation algorithm is reproduced below for reference.
+The algorithm for recommendation is presented below for reference.
 \newline
 
 In each round:
@@ -118,29 +118,34 @@ In each round:
 
 \subsection{Update}
 
-If the random policy does not recommend the same article, no update occurs.
+The algorithm for udpate is presented below for reference:
+\newline
 
-Otherwise, the reward is either 1 (user clicked on the recommended article) or 0 (user did not click). We use $y_t$ below to denote the reward.
+\begin{itemize}
+    \item If the random policy does not recommend the same article, no update occurs.
+
+    \item Otherwise, the reward is either 1 (user clicked on the recommended article) or 0 (user did not click). We use $y_t$ below to denote the reward.
 
 
 
-Set $M_x \leftarrow M_x + z_t \cdot z_t^T$
+    Set $M_x \leftarrow M_x + z_t \cdot z_t^T$
 
-Set $b_x \leftarrow b_x + y_t z_t$
+    Set $b_x \leftarrow b_x + y_t z_t$
 
-This update is done quite easily in our implementation, as we simply add the outer product of the chosen feature vector $z_t$ to the chosen article's matrix $M_x$ (stored in the hash table $A$) and add reward feedbackto the chosen article's $b_x$.
-\begin{verbatim}
-    A[chosen_article] += np.outer(chosen_feature, chosen_feature)
-    b[chosen_article] += reward * chosen_feature
-\end{verbatim}
+    This update is completed easily in our implementation, as we simply add the outer product of the chosen feature vector $z_t$ to the chosen article's matrix $M_x$ (stored in the hash table $A$) and add reward feedbackto the chosen article's $b_x$.
+    \begin{verbatim}
+        A[chosen_article] += np.outer(chosen_feature, chosen_feature)
+        b[chosen_article] += reward * chosen_feature
+    \end{verbatim}
+\end{itemize}
 
 \subsection{Implementation details}
 
-We use Python dictionaries to keep the matrix $M_x$ and a vector $b_x$ for each arm (article). Since each round requires multiple vector operations (and possibly a matrix outer product) we use Numpy arrays rather than Python lists. Numpy provides optimized linear algebra operations that speed up our code by orders of magnitude compared to the naive implementation.
+We use Python dictionaries to keep the matrix $M_x$ and a vector $b_x$ for each arm (article). Since each round requires multiple vector operations (and possibly a matrix outer product) we use Numpy arrays rather than Python lists. Numpy provides optimized linear algebra operations that speed up our code by orders of magnitude compared to the naive implementation. Also, we cached the inverse of matrices so we do not need to repeat such expensive operations unnecessarily.
 
 \subsection{Results}
 
-We experimented with various values for the learning rate $\alpha$ between 0.1 and 2. After some test submissions we found that $\alpha = 0.3$ produced a score of 0.059632, just above the hard baseline.
+We experimented with various values for the learning rate $\alpha$ between 0.1 and 2 with incremental step of 0.1. After some test submissions we found that $\alpha = 0.2$ produced a score of 0.059632, just above the hard baseline.
 
 
 
