@@ -24,7 +24,7 @@
 \maketitle
 
 \section{Approximate Near-duplicate Search using Locality Sensitive Hashing} 
-To detect duplicate videos, min-hashing is used on videos in the mapper so that similar ones are grouped together. In order not to miss any potential duplicate videos, we set a relatively lower threshhold and then manually filter out false positives using jaccard similarity.
+To detect duplicate videos, min-hashing is used on videos in the mapper so that similar ones are grouped together. In order not to miss any potential duplicate videos, we set a relatively lower threshold and then manually filter out false positives using Jaccard similarity.
 
         \subsection{Min-Hashing on the Mapper}
                 We start by generating the permutations which will be used in the algorithm first. Then a hash function of the form
@@ -64,7 +64,7 @@ To detect duplicate videos, min-hashing is used on videos in the mapper so that 
                 After collecting all videos with the same key (signature), we inspect all videos with this key by calculating their Jaccard similarity. If the similarity is at least 85\%, the video is considered as a duplicate.
 
         \subsection{Result}
-                With the above algorithm, we achieved a result of 0.99. We think that by further tweaking the number of band and rows, we could get a lower threshhold before manually filtering similar object and potentially reach a higher score.
+                With the above algorithm, we achieved a result of 0.99. We think that by further tweaking the number of band and rows, we could get a lower threshold before manually filtering similar object and potentially reach a higher score.
 
 \newpage
 
@@ -79,7 +79,7 @@ In every mapper, we trained a linear SVM classifier online by reading the input 
 The implementation in the reducer is straightforward. We just took the mean of all the values passed by every mapper to obtain the final coefficients.
 
 \subsection{Results}
-In order to achieve better result, we tried different tranformations on the input data. Example transformations we used include power functions, logarithm functions, etc. The submission result did not show very much improvement. We also alternated between different loss funcitons and regularization parameters. In the final result, we chose to use hinge loss and l2 norm and obtained around 77 percent of the final score.
+In order to achieve better result, we tried different tranformations on the input data. Example transformations we used include power functions, logarithm functions, etc. The submission result did not show very much improvement. We also alternated between different loss funcitons and regularization parameters. In the final result, we chose to use hinge loss and L2 norm and obtained around 77 percent of the final score.
 
 \newpage
 
@@ -118,7 +118,7 @@ In each round:
 
 \subsection{Update}
 
-The algorithm for udpate is presented below for reference:
+The algorithm for update is presented below for reference:
 \newline
 
 \begin{itemize}
@@ -132,7 +132,7 @@ The algorithm for udpate is presented below for reference:
 
     Set $b_x \leftarrow b_x + y_t z_t$
 
-    This update is completed easily in our implementation, as we simply add the outer product of the chosen feature vector $z_t$ to the chosen article's matrix $M_x$ (stored in the hash table $A$) and add reward feedbackto the chosen article's $b_x$.
+    This update is completed easily in our implementation, as we simply add the outer product of the chosen feature vector $z_t$ to the chosen article's matrix $M_x$ (stored in the hash table $A$) and add reward feedback to the chosen article's $b_x$.
     \begin{verbatim}
         A[chosen_article] += np.outer(chosen_feature, chosen_feature)
         b[chosen_article] += reward * chosen_feature
