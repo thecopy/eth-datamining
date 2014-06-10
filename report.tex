@@ -84,7 +84,18 @@ In order to achieve better result, we tried different tranformations on the inpu
 \newpage
 
 \section{Extracting Representative Elements From Large Datasets}
-Maximum of 2 pages per section.
+
+The goal of this project was to extract 200 representative centers of a dataset of 2,000,000 images. The images were represented as 750-dimensional feature vectors.
+
+\subsection{Mapper}
+Our mapper function uses the MiniBatchKMeans algorithm provided by scikit to generate 200 clusters. We used k-means++ with 5 random initializations.
+
+\subsection{Reducer}
+The reducer simply averages the clusterings produced by each mapper.
+
+\subsection{Results}
+
+Our result was 743.42174089, a lower cost than the easy baseline but higher than the hard baseline. We suspect that importance sampling would give a superior result, but uniform sampling and the scikit-learn k-means implementation was sufficient to surpass the easy baseline.
 
 \newpage
 
